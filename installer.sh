@@ -10,12 +10,12 @@ SCRIPT_URL="https://raw.githubusercontent.com/JustFazz/rdp/main/install-bedrock.
 CACHE_DIR="$HOME/bds"
 CACHE_FILE="$CACHE_DIR/bds.sh"
 
-cat > "$PREFIX/bds" <<'EOF'
+cat > "$PREFIX/bin/bds" <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
 exec bash "$HOME/bds/bds.sh" "$@"
 EOF
 
-chmod +x "$BIN_DIR/bds"
+chmod +x "$PREFIX/bin/bds"
 
 echo "[BDS] Preparing installer..."
 
