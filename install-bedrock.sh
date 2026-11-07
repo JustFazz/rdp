@@ -295,7 +295,7 @@ update_server() {
   if ! download_and_extract "${url}" "${staging}"; then
     start_server || true
     die "Update gagal diunduh/diekstrak; server dicoba dinyalakan kembali."
-  fi  mo
+  fi  
 
   cp -a "${staging}/." "${SERVER_DIR}/"
   cp -a "${preserve}/." "${SERVER_DIR}/"
