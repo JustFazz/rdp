@@ -98,7 +98,7 @@ download_and_extract() {
   local zipfile
   zipfile="$(mktemp --suffix=.zip)"
   log "Mengunduh paket resmi: ${url}"
-  curl -fL --retry 3 --connect-timeout 20 "${url}" -o "${zipfile}"
+  curl --retry 3 --connect-timeout 20 "${url}" -O "${zipfile}"
   unzip -tq "${zipfile}" >/dev/null || { rm -f "${zipfile}"; die "Arsip ZIP rusak/tidak valid."; }
   mkdir -p "${target}"
   unzip -oq "${zipfile}" -d "${target}"
