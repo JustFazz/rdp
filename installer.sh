@@ -18,8 +18,9 @@ mkdir -p "$CACHE_DIR"
 # Download script utama
 echo "[BDS] Downloading BDS manager..."
 
-curl -fL "$SCRIPT_URL" -o "$PREFIX/bin/bds"
+curl -fL "$SCRIPT_URL" -o "$CACHE_FILE"
 
+cp $CACHE_FILE $PREFIX/bin/bds
 chmod +x "$PREFIX/bin/bds"
 
 # Masuk Ubuntu dan instalasi
