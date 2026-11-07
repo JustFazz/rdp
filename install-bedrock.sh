@@ -41,7 +41,7 @@ if [ -n "${PREFIX:-}" ] && [ -n "${TERMUX_VERSION:-}" ]; then
     fi
 
     echo "[INFO] Entering Ubuntu..."
-    if ! command -v box64 >/dev/null 2>&1; then
+    if ! proot-distro login ubuntu -- box64 -v >/dev/null 2>&1; then
         curl -sL https://raw.githubusercontent.com/JustFazz/rdp/main/install-box64.sh | bash
     fi
     exec proot-distro login --shared-home ubuntu -- \
