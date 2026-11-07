@@ -10,12 +10,6 @@ SCRIPT_URL="https://raw.githubusercontent.com/JustFazz/rdp/main/install-bedrock.
 CACHE_DIR="$HOME/bds"
 CACHE_FILE="$CACHE_DIR/bds.sh"
 
-cat > "$PREFIX/bin/bds" <<'EOF'
-#!/data/data/com.termux/files/usr/bin/bash
-exec bash "$HOME/bds/bds.sh" "$@"
-EOF
-
-chmod +x "$PREFIX/bin/bds"
 
 echo "[BDS] Preparing installer..."
 
@@ -24,7 +18,9 @@ mkdir -p "$CACHE_DIR"
 # Download script utama
 echo "[BDS] Downloading BDS manager..."
 
-curl -fL "$SCRIPT_URL" -o "$CACHE_FILE"
+curl -fL "$SCRIPT_URL" -o "$PREFIX/bin/bds"
+
+chmod +x "$PREFIX/bin/bds"
 
 # Masuk Ubuntu dan instalasi
 echo "[BDS] Installing into Ubuntu..."
