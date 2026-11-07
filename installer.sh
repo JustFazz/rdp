@@ -20,7 +20,15 @@ echo "[BDS] Downloading BDS manager..."
 
 curl -fL "$SCRIPT_URL" -o "$CACHE_FILE"
 
-cp $CACHE_FILE $PREFIX/bin/bds
+cp $CACHE_FILE $HOME/install-bedrock.sh
+
+chmod +x $HOME/install-bedrock.sh
+
+cat > "$PREFIX/bin/bds" <<'EOF'
+#!/data/data/com.termux/files/usr/bin/bash
+exec bash "$HOME/install-bedrock.sh" "$@"
+EOF
+
 chmod +x "$PREFIX/bin/bds"
 
 # Masuk Ubuntu dan instalasi
@@ -54,3 +62,5 @@ echo "[BDS] Command available: bds"
 UBUNTU
 
 echo "[BDS] Done!"
+
+bds
