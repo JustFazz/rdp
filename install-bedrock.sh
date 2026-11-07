@@ -96,6 +96,7 @@ check_platform() {
     if [[ "$arch" == "aarch64" ]]; then
         if ! command -v box64 >/dev/null 2>&1; then
             log "Box64 tidak ditemukan di Ubuntu. Instal Box64 terlebih dahulu."
+            logout
             curl -sL https://raw.githubusercontent.com/JustFazz/rdp/main/install-box64.sh | bash
         fi
 
