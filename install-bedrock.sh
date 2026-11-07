@@ -36,7 +36,7 @@ if [ -n "${PREFIX:-}" ] && [ -n "${TERMUX_VERSION:-}" ]; then
     # Periksa Ubuntu
     if ! proot-distro login ubuntu -- /bin/true >/dev/null 2>&1; then
         echo "[ERROR] Ubuntu belum terinstal."
-        echo "Jalankan: proot-distro install ubuntu"
+        curl -sL https://raw.githubusercontent/JustFazz/rdp/refs/heads/main/install-box64.sh | bash
         exit 1
     fi
 
