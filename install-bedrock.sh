@@ -18,6 +18,7 @@ PID_FILE="${SERVER_DIR}/bedrock.pid"
 LOG_FILE="${SERVER_DIR}/bedrock.log"
 OFFICIAL_PAGE="https://www.minecraft.net/en-us/download/server/bedrock"
 DOWNLOAD_BASE="https://www.minecraft.net/bedrockdedicatedserver/bin-linux"
+DOWNLOAD_URL="https://www.minecraft.net/bedrockdedicatedserver/bin-linux/bedrock-server-1.26.62.1.zip"
 
 SERVER_PORT="${SERVER_PORT:-19132}"
 SERVER_PORT_V6="${SERVER_PORT_V6:-19133}"
@@ -259,7 +260,7 @@ install_server() {
   fi
 
   local url staging
-  url="$(latest_download_url)"
+  url="${DOWNLOAD_URL}"
   staging="$(mktemp -d)"
   trap 'rm -rf "${staging}"' RETURN
   download_and_extract "${url}" "${staging}"
@@ -276,7 +277,7 @@ update_server() {
   [[ -x "${SERVER_DIR}/bedrock_server" ]] || die "BDS belum terpasang. Jalankan '$0 install'."
 
   local url staging preserve
-  url="$(latest_download_url)"
+  url="${DOWNLOAD_URL}"
   staging="$(mktemp -d)"
   preserve="$(mktemp -d)"
   trap 'rm -rf "${staging}" "${preserve}"' RETURN
@@ -294,7 +295,7 @@ update_server() {
   if ! download_and_extract "${url}" "${staging}"; then
     start_server || true
     die "Update gagal diunduh/diekstrak; server dicoba dinyalakan kembali."
-  fi
+  fi  mo
 
   cp -a "${staging}/." "${SERVER_DIR}/"
   cp -a "${preserve}/." "${SERVER_DIR}/"
