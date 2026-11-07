@@ -53,9 +53,9 @@ install_packages() {
   local arch
   arch="$(uname -m)"
   if [[ "${arch}" == "aarch64" ]]; then
-    if ! command -v qemu-x86_64 >/dev/null 2>&1 && ! command -v box64 >/dev/null 2>&1; then
+    if ! command -v qemu-x86-64 >/dev/null 2>&1 && ! command -v box64 >/dev/null 2>&1; then
       log "Mencoba memasang qemu-user-x86_64 untuk menjalankan binary x86_64..."
-      pkg install -y qemu-user-x86_64 || warn "Tidak dapat memasang qemu-user-x86_64 otomatis. Jika server tidak bisa berjalan, pasang box64 atau qemu-user-x86_64 secara manual."
+      pkg install -y qemu-user-x86-64 || warn "Tidak dapat memasang qemu-user-x86_64 otomatis. Jika server tidak bisa berjalan, pasang box64 atau qemu-user-x86_64 secara manual."
     fi
   fi
 }
@@ -182,6 +182,8 @@ start_server() {
   local exec_cmd
   exec_cmd="$(get_exec_cmd)"
 
+  log "${exec_cmd}"
+  
   export LD_LIBRARY_PATH="${SERVER_DIR}:${LD_LIBRARY_PATH:-}"
 
   nohup ${exec_cmd} > "${LOG_FILE}" 2>&1 &
