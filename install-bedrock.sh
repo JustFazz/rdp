@@ -9,6 +9,56 @@
 # Perintah:
 #   install | start | stop | restart | status | logs | update | backup
 #
+
+
+# ==========================================
+# AUTO ENTER UBUNTU FROM TERMUX
+# ==========================================
+
+if [ -n "${PREFIX:-}" ] && [ -n "${TERMUX_VERSION:-}" ]; then
+
+    echo "[INFO] Termux detected."
+
+    if ! command -v proot-distro >/dev/null 2>&1; then
+        echo "[INFO] Installing proot-distro..."
+        pkg install -y proot-distro
+    fi
+
+    # Script harus berada di Termux HOME
+    SCRIPT_PATH="$(realpath "$0")"
+    RELATIVE_PATH="${SCRIPT_PATH#"$HOME"/}"
+
+    if [ "$RELATIVE_PATH" = "$SCRIPT_PATH" ]; then
+        echo "[ERROR] Simpan script di folder HOME Termux."
+        exit 1
+    fi
+
+    # Periksa Ubuntu
+    if ! proot-distro login ubuntu -- /bin/true >/dev/null 2>&1; then
+        echo "[ERROR] Ubuntu belum terinstal."
+        echo "Jalankan: proot-distro install ubuntu"
+        exit 1
+    fi
+
+    echo "[INFO] Entering Ubuntu..."
+
+    exec proot-distro login --shared-home ubuntu -- \
+        bash -lc 'exec bash "/root/$1" "${@:2}"' \
+        _ "$RELATIVE_PATH" "$@"
+
+fi
+
+# ==========================================
+# UBUNTU ENVIRONMENT
+# ==========================================
+
+set -Eeuo pipefail
+
+if [ ! -f /etc/os-release ] || ! grep -qi ubuntu /etc/os-release; then
+    echo "[ERROR] Script harus berjalan di Ubuntu."
+    exit 1
+fi
+
 set -Eeuo pipefail
 
 APP_NAME="Minecraft Bedrock Dedicated Server (Termux)"
@@ -32,32 +82,46 @@ log()  { printf '\033[1;32m[INFO]\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m[WARN]\033[0m %s\n' "$*" >&2; }
 die()  { printf '\033[1;31m[ERROR]\033[0m %s\n' "$*" >&2; exit 1; }
 
+
 check_platform() {
-  local arch
-  arch="$(uname -m)"
-  log "Mendeteksi arsitektur perangkat: ${arch}"
-  if [[ "${arch}" != "x86_64" && "${arch}" != "aarch64" ]]; then
-    die "Arsitektur tidak didukung: ${arch}. BDS resmi membutuhkan x86_64 atau ARM64 dengan emulator."
-  fi
-  if [[ "${arch}" == "aarch64" ]]; then
-    warn "Perangkat Android Anda menggunakan arsitektur ARM64."
-    warn "Binary BDS resmi dikompilasi untuk x86_64, sehingga membutuhkan emulator (seperti qemu-user-x86_64 atau box64)."
-  fi
+    local arch
+    arch="$(uname -m)"
+
+    log "Arsitektur Ubuntu: ${arch}"
+
+    if [[ "$arch" != "x86_64" && "$arch" != "aarch64" ]]; then
+        die "Arsitektur tidak didukung: ${arch}"
+    fi
+
+    if [[ "$arch" == "aarch64" ]]; then
+        if ! command -v box64 >/dev/null 2>&1; then
+            die "Box64 tidak ditemukan di Ubuntu. Instal Box64 terlebih dahulu."
+        fi
+
+        log "Box64 ditemukan: $(command -v box64)"
+        log "BDS akan dijalankan melalui Box64."
+    fi
 }
 
-install_packages() {
-  log "Memasang dependensi Termux..."
-  pkg update -y
-  pkg install -y ca-certificates curl unzip python libcurl wget
 
-  local arch
-  arch="$(uname -m)"
-  if [[ "${arch}" == "aarch64" ]]; then
-    if ! command -v qemu-x86-64 >/dev/null 2>&1 && ! command -v box64 >/dev/null 2>&1; then
-      log "Mencoba memasang qemu-user-x86_64 untuk menjalankan binary x86_64..."
-      pkg install -y qemu-user-x86-64 || warn "Tidak dapat memasang qemu-user-x86_64 otomatis. Jika server tidak bisa berjalan, pasang box64 atau qemu-user-x86_64 secara manual."
-    fi
-  fi
+install_packages() {
+    log "Memasang dependensi Ubuntu..."
+
+    export DEBIAN_FRONTEND=noninteractive
+
+    apt-get update
+
+    apt-get install -y \
+        ca-certificates \
+        curl \
+        unzip \
+        python3 \
+        wget \
+        libcurl4 \
+        tar \
+        procps
+
+    log "Dependensi Ubuntu berhasil dipasang."
 }
 
 ensure_dirs() {
