@@ -48,7 +48,7 @@ check_platform() {
 install_packages() {
   log "Memasang dependensi Termux..."
   pkg update -y
-  pkg install -y ca-certificates curl unzip python libcurl
+  pkg install -y ca-certificates curl unzip python libcurl wget
 
   local arch
   arch="$(uname -m)"
@@ -98,7 +98,15 @@ download_and_extract() {
   local zipfile
   zipfile="$(mktemp --suffix=.zip)"
   log "Mengunduh paket resmi: ${url}"
-  curl --retry 3 --connect-timeout 20 "${url}" -O "${zipfile}"
+  wget \
+    --https-only \
+    --max-redirect=20 \
+    --tries=3 \
+    --timeout=30 \
+    --waitretry=3 \
+    --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36" \
+    --output-document="${zipfile}" \
+    "${url}"
   unzip -tq "${zipfile}" >/dev/null || { rm -f "${zipfile}"; die "Arsip ZIP rusak/tidak valid."; }
   mkdir -p "${target}"
   unzip -oq "${zipfile}" -d "${target}"
