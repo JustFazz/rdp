@@ -30,7 +30,7 @@ pkg update -y
 pkg install proot-distro -y
 
 # Install Ubuntu
-if [ ! -d "$PREFIX/var/lib/proot-distro/containers/rootfs/ubuntu" ]; then
+if [ ! -d "$PREFIX/var/lib/proot-distro/containers/ubuntu" ]; then
     echo "[2/4] Installing Ubuntu..."
     proot-distro install ubuntu
 else
