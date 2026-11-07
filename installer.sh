@@ -7,8 +7,15 @@ set -euo pipefail
 SCRIPT_URL="https://raw.githubusercontent.com/JustFazz/rdp/main/install-bedrock.sh"
 
 # Cache sementara di Termux Home
-CACHE_DIR="$HOME/.cache/bds"
+CACHE_DIR="$HOME/bds"
 CACHE_FILE="$CACHE_DIR/bds.sh"
+
+cat > "$PREFIX/bds" <<'EOF'
+#!/data/data/com.termux/files/usr/bin/bash
+exec bash "$HOME/bds/bds.sh" "$@"
+EOF
+
+chmod +x "$BIN_DIR/bds"
 
 echo "[BDS] Preparing installer..."
 
@@ -32,7 +39,7 @@ BIN_DIR="/usr/local/bin"
 mkdir -p "$INSTALL_DIR" "$BIN_DIR"
 
 # Salin script dari shared home Termux
-install -m 755 /root/.cache/bds/bds.sh \
+install -m 755 /root/bds/bds.sh \
     "$INSTALL_DIR/bds.sh"
 
 # Buat command bds
