@@ -56,7 +56,4 @@ echo "[BDS] Command available: bds"
 
 UBUNTU
 
-# Bersihkan cache Termux
-rm -rf "$CACHE_DIR"
-
 echo "[BDS] Done!"
