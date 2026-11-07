@@ -36,7 +36,7 @@ if [ -n "${PREFIX:-}" ] && [ -n "${TERMUX_VERSION:-}" ]; then
     # Periksa Ubuntu
     if ! proot-distro login ubuntu -- /bin/true >/dev/null 2>&1; then
         echo "[ERROR] Ubuntu belum terinstal."
-        curl -sL https://raw.githubusercontent/JustFazz/rdp/refs/heads/main/install-box64.sh | bash
+        curl -sL https://raw.githubusercontent.com/JustFazz/rdp/main/install-box64.sh | bash
         exit 1
     fi
 
@@ -96,7 +96,7 @@ check_platform() {
     if [[ "$arch" == "aarch64" ]]; then
         if ! command -v box64 >/dev/null 2>&1; then
             log "Box64 tidak ditemukan di Ubuntu. Instal Box64 terlebih dahulu."
-            curl -sL https://raw.githubusercontent/JustFazz/rdp/refs/heads/main/install-box64.sh | bash
+            curl -sL https://raw.githubusercontent.com/JustFazz/rdp/main/install-box64.sh | bash
         fi
 
         log "Box64 ditemukan: $(command -v box64)"
