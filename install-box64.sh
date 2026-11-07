@@ -30,12 +30,13 @@ pkg update -y
 pkg install proot-distro -y
 
 # Install Ubuntu
-if ! proot-distro list | grep -q 'ubuntu'; then
+if [ ! -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu" ]; then
     echo "[2/4] Installing Ubuntu..."
     proot-distro install ubuntu
 else
     echo "Ubuntu already installed."
 fi
+
 
 echo "[3/4] Building Box64 inside Ubuntu..."
 
