@@ -37,7 +37,6 @@ else
     echo "Ubuntu already installed."
 fi
 
-
 echo "[3/4] Building Box64 inside Ubuntu..."
 
 proot-distro login ubuntu -- bash -c '
