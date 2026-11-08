@@ -348,13 +348,13 @@ backup_server() {
 }
 
 install_server() {
+  if [[ -x "${SERVER_DIR}/bedrock_server" ]]; then
+    die "Instalasi BDS sudah ada di ${SERVER_DIR}. Gunakan '$0 update' untuk memperbarui."
+  fi
   check_platform
   install_packages
   ensure_dirs
 
-  if [[ -x "${SERVER_DIR}/bedrock_server" ]]; then
-    die "Instalasi BDS sudah ada di ${SERVER_DIR}. Gunakan '$0 update' untuk memperbarui."
-  fi
 
   local url staging
   url="${DOWNLOAD_URL}"
