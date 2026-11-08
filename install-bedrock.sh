@@ -210,7 +210,7 @@ get_exec_cmd() {
   arch="$(uname -m)"
   if [[ "${arch}" == "aarch64" ]]; then
     if command -v box64 >/dev/null 2>&1; then
-      echo "bedrock/run-bds.sh"
+      echo "exec run-bds.sh"
     elif command -v qemu-x86_64 >/dev/null 2>&1; then
       echo "qemu-x86_64 ./bedrock_server"
     else
