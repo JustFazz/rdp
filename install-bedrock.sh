@@ -206,30 +206,6 @@ EOF
 }
 
 get_exec_cmd() {
-cat > run-bds.sh <<'EOF'
-#!/usr/bin/env bash
-
-# Box64 optimization
-export BOX64_DYNAREC=1
-export BOX64_DYNAREC_BIGBLOCK=2
-export BOX64_DYNAREC_FASTNAN=1
-export BOX64_DYNAREC_FASTROUND=1
-export BOX64_DYNAREC_NATIVEFLAGS=1
-
-# Dynamic cache
-export BOX64_DYNACACHE=1
-export BOX64_DYNACACHE_FOLDER="$HOME/.cache/box64"
-
-# CALL/RET optimization (experimental)
-export BOX64_DYNAREC_CALLRET=1
-
-mkdir -p "$BOX64_DYNACACHE_FOLDER"
-
-# Start BDS
-exec box64 ./bedrock_server
-EOF
-
-chmod +x run-bds.sh
   local arch
   arch="$(uname -m)"
   if [[ "${arch}" == "aarch64" ]]; then
@@ -266,7 +242,30 @@ start_server() {
 
   log "Menjalankan Minecraft Bedrock Server di background..."
   cd "${SERVER_DIR}"
+cat > run-bds.sh <<'EOF'
+#!/usr/bin/env bash
 
+# Box64 optimization
+export BOX64_DYNAREC=1
+export BOX64_DYNAREC_BIGBLOCK=2
+export BOX64_DYNAREC_FASTNAN=1
+export BOX64_DYNAREC_FASTROUND=1
+export BOX64_DYNAREC_NATIVEFLAGS=1
+
+# Dynamic cache
+export BOX64_DYNACACHE=1
+export BOX64_DYNACACHE_FOLDER="$HOME/.cache/box64"
+
+# CALL/RET optimization (experimental)
+export BOX64_DYNAREC_CALLRET=1
+
+mkdir -p "$BOX64_DYNACACHE_FOLDER"
+
+# Start BDS
+exec box64 ./bedrock_server
+EOF
+
+chmod +x run-bds.sh
   local exec_cmd
   exec_cmd="$(get_exec_cmd)"
 
