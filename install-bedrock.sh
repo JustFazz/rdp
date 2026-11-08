@@ -9,8 +9,6 @@
 # Perintah:
 #   install | start | stop | restart | status | logs | update | backup
 #
-
-
 # ==========================================
 # AUTO ENTER UBUNTU FROM TERMUX
 # ==========================================
@@ -20,31 +18,28 @@ if [ -n "${PREFIX:-}" ] && [ -n "${TERMUX_VERSION:-}" ]; then
     echo "[INFO] Termux detected."
 
     if ! command -v proot-distro >/dev/null 2>&1; then
-        echo "[INFO] Installing proot-distro..."
         pkg install -y proot-distro
     fi
 
-    # Script harus berada di Termux HOME
     SCRIPT_PATH="$(realpath "$0")"
     RELATIVE_PATH="${SCRIPT_PATH#"$HOME"/}"
 
     if [ "$RELATIVE_PATH" = "$SCRIPT_PATH" ]; then
-        echo "[ERROR] Simpan script di folder HOME Termux."
+        echo "[ERROR] Script harus berada di HOME Termux."
         exit 1
     fi
 
-    # Periksa Ubuntu
     if ! proot-distro login ubuntu -- /bin/true >/dev/null 2>&1; then
         echo "[ERROR] Ubuntu belum terinstal."
-        curl -sL https://raw.githubusercontent.com/JustFazz/rdp/main/install-box64.sh | bash
         exit 1
     fi
 
     echo "[INFO] Entering Ubuntu..."
 
-    exec proot-distro login --shared-home ubuntu -- \
-        bash -lc 'exec bash "/root/$1" "${@:2}"' \
-        _ "$RELATIVE_PATH" "$@"
+    exec proot-distro login --detach --shared-home ubuntu -- \
+        bash -lc '
+            exec bds "$@"
+        ' _ "$@"
 
 fi
 
